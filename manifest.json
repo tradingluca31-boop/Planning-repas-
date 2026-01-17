@@ -1,0 +1,20 @@
+{
+  "name": "Meal Prep Semaine - Luca & Sonia",
+  "short_name": "Meal Prep",
+  "description": "Planning repas hebdomadaire pour Luca et Sonia",
+  "start_url": "./meal-prep-semaine.html",
+  "display": "standalone",
+  "background_color": "#fff5f5",
+  "theme_color": "#e84393",
+  "orientation": "any",
+  "icons": [
+    {
+      "src": "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🍽️</text></svg>",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    }
+  ],
+  "categories": ["food", "health", "lifestyle"],
+  "lang": "fr-FR"
+}

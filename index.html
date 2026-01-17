@@ -1,0 +1,3038 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Meal Prep Semaine - Luca & Sonia</title>
+
+    <!-- PWA Meta Tags -->
+    <link rel="manifest" href="./manifest.json">
+    <meta name="theme-color" content="#e84393">
+
+    <!-- iOS PWA Meta Tags -->
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="Meal Prep">
+    <link rel="apple-touch-icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🍽️</text></svg>">
+
+    <!-- Mobile Optimization -->
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="format-detection" content="telephone=no">
+
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 40px 20px;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 40px;
+            color: white;
+        }
+
+        header h1 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+        }
+
+        header p {
+            font-size: 1.1rem;
+            opacity: 0.9;
+        }
+
+        .week-selector {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-bottom: 30px;
+        }
+
+        .week-selector input {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 10px;
+            font-family: 'Poppins', sans-serif;
+            font-size: 1rem;
+            background: white;
+            cursor: pointer;
+        }
+
+        .meal-grid {
+            display: grid;
+            grid-template-columns: 90px repeat(7, 1fr);
+            gap: 8px;
+            background: rgba(255,255,255,0.1);
+            border-radius: 20px;
+            padding: 15px;
+            backdrop-filter: blur(10px);
+        }
+
+        .header-cell {
+            background: linear-gradient(135deg, #f8f9fa, #fff);
+            padding: 10px 6px;
+            text-align: center;
+            font-weight: 600;
+            font-size: 0.85rem;
+            color: #4a4a6a;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+        }
+
+        .day-header {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            border: none;
+        }
+
+        .day-header.today {
+            background: linear-gradient(135deg, #00b894, #00a383);
+            transform: scale(1.03);
+            box-shadow: 0 4px 15px rgba(0,184,148,0.4);
+        }
+
+        .meal-type {
+            background: linear-gradient(135deg, #f8f9fa, #fff);
+            padding: 8px 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            font-size: 0.7rem;
+            color: #4a4a6a;
+            border-radius: 12px;
+            border-left: 4px solid;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+            writing-mode: horizontal-tb;
+        }
+
+        .meal-type.petit-dej { border-color: #fdcb6e; }
+        .meal-type.dejeuner { border-color: #00b894; }
+        .meal-type.diner { border-color: #6c5ce7; }
+        .meal-type.snack { border-color: #fd79a8; }
+
+        .meal-cell {
+            background: linear-gradient(135deg, #f8f9fa, #fff);
+            border-radius: 12px;
+            padding: 8px;
+            min-height: 80px;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .meal-cell:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.12);
+        }
+
+        .person-meal {
+            padding: 6px 8px;
+            border-radius: 8px;
+            font-size: 0.75rem;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            border-left: 3px solid;
+            background: white;
+        }
+
+        .person-meal.luca {
+            border-color: #0984e3;
+            background: linear-gradient(135deg, #f0f7ff, #fff);
+        }
+
+        .person-meal.sonia {
+            border-color: #e84393;
+            background: linear-gradient(135deg, #fff0f6, #fff);
+        }
+
+        .person-name {
+            font-weight: 700;
+            font-size: 0.6rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 2px;
+        }
+
+        .person-meal.luca .person-name {
+            color: #0984e3;
+        }
+
+        .person-meal.sonia .person-name {
+            color: #e84393;
+        }
+
+        .meal-content {
+            font-weight: 500;
+            line-height: 1.2;
+            color: #2d3436;
+            font-size: 0.72rem;
+        }
+
+        .meal-content[contenteditable="true"]:focus {
+            outline: none;
+            background: rgba(102, 126, 234, 0.1);
+            border-radius: 4px;
+            padding: 2px 4px;
+            margin: -2px -4px;
+        }
+
+        .legend {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            margin-top: 30px;
+            flex-wrap: wrap;
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: white;
+            font-size: 0.9rem;
+        }
+
+        .legend-color {
+            width: 20px;
+            height: 20px;
+            border-radius: 5px;
+        }
+
+        .legend-color.luca {
+            background: linear-gradient(135deg, #f0f7ff, #fff);
+            border-left: 4px solid #0984e3;
+        }
+        .legend-color.sonia {
+            background: linear-gradient(135deg, #fff0f6, #fff);
+            border-left: 4px solid #e84393;
+        }
+
+        .actions {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-top: 30px;
+        }
+
+        .btn {
+            padding: 12px 30px;
+            border: none;
+            border-radius: 25px;
+            font-family: 'Poppins', sans-serif;
+            font-size: 1rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .btn-save {
+            background: linear-gradient(135deg, #00b894, #00a383);
+            color: white;
+        }
+
+        .btn-print {
+            background: white;
+            color: #4a4a6a;
+        }
+
+        .btn-clear {
+            background: linear-gradient(135deg, #ff6b6b, #ee5a5a);
+            color: white;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 20px rgba(0,0,0,0.2);
+        }
+
+        .shopping-list {
+            background: rgba(255,255,255,0.95);
+            border-radius: 20px;
+            padding: 30px;
+            margin-top: 40px;
+        }
+
+        .shopping-list h2 {
+            color: #4a4a6a;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .shopping-list textarea {
+            width: 100%;
+            min-height: 150px;
+            border: 2px dashed #ddd;
+            border-radius: 10px;
+            padding: 15px;
+            font-family: 'Poppins', sans-serif;
+            font-size: 0.95rem;
+            resize: vertical;
+        }
+
+        .shopping-list textarea:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        .same-meal {
+            background: linear-gradient(135deg, #a29bfe, #6c5ce7) !important;
+        }
+
+        .same-meal .person-name::after {
+            content: " & Sonia";
+        }
+
+        @media print {
+            body {
+                background: white;
+                padding: 20px;
+            }
+            .actions, .week-selector {
+                display: none;
+            }
+            .meal-grid {
+                background: #f5f5f5;
+            }
+        }
+
+        @media (max-width: 1200px) {
+            .meal-grid {
+                grid-template-columns: 80px repeat(7, 1fr);
+                gap: 6px;
+                padding: 12px;
+            }
+            .meal-cell {
+                padding: 6px;
+                min-height: 70px;
+            }
+            .person-meal {
+                padding: 4px 6px;
+            }
+            .meal-content {
+                font-size: 0.68rem;
+            }
+        }
+
+        @media (max-width: 900px) {
+            .meal-grid {
+                grid-template-columns: 1fr 1fr;
+                gap: 10px;
+            }
+            .header-cell:first-child {
+                display: none;
+            }
+            .meal-type {
+                grid-column: span 2;
+                writing-mode: horizontal-tb;
+            }
+            .meal-cell {
+                min-height: auto;
+            }
+        }
+
+        @media (max-width: 600px) {
+            .meal-grid {
+                grid-template-columns: 1fr;
+            }
+            .meal-type {
+                grid-column: span 1;
+            }
+        }
+
+        .emoji {
+            font-size: 1.2rem;
+        }
+
+        .notes-section {
+            background: rgba(255,255,255,0.95);
+            border-radius: 20px;
+            padding: 30px;
+            margin-top: 20px;
+        }
+
+        .notes-section h2 {
+            color: #4a4a6a;
+            margin-bottom: 20px;
+        }
+
+        .notes-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+        }
+
+        .note-card {
+            background: linear-gradient(135deg, #ffeaa7, #fdcb6e);
+            padding: 15px;
+            border-radius: 10px;
+            font-size: 0.9rem;
+        }
+
+        .note-card h4 {
+            margin-bottom: 8px;
+            color: #4a4a6a;
+        }
+
+        /* Video Links Section */
+        .videos-section {
+            background: rgba(255,255,255,0.95);
+            border-radius: 20px;
+            padding: 30px;
+            margin-top: 20px;
+        }
+
+        .videos-section h2 {
+            color: #4a4a6a;
+            margin-bottom: 20px;
+        }
+
+        .video-input-row {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 15px;
+            flex-wrap: wrap;
+        }
+
+        .video-input-row input {
+            flex: 1;
+            min-width: 200px;
+            padding: 12px 15px;
+            border: 2px solid #ddd;
+            border-radius: 10px;
+            font-family: 'Poppins', sans-serif;
+            font-size: 0.9rem;
+        }
+
+        .video-input-row input:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        .video-input-row select {
+            padding: 12px 15px;
+            border: 2px solid #ddd;
+            border-radius: 10px;
+            font-family: 'Poppins', sans-serif;
+            background: white;
+            cursor: pointer;
+        }
+
+        .video-input-row button {
+            padding: 12px 25px;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-family: 'Poppins', sans-serif;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .video-input-row button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        .video-links-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .video-card {
+            background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+            border-radius: 12px;
+            padding: 15px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .video-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+        }
+
+        .video-card.tiktok {
+            background: linear-gradient(135deg, #000, #25f4ee);
+        }
+
+        .video-card.tiktok .video-title,
+        .video-card.tiktok .video-platform {
+            color: white;
+        }
+
+        .video-card.youtube {
+            background: linear-gradient(135deg, #ff0000, #cc0000);
+        }
+
+        .video-card.youtube .video-title,
+        .video-card.youtube .video-platform {
+            color: white;
+        }
+
+        .video-card.instagram {
+            background: linear-gradient(135deg, #833ab4, #fd1d1d, #fcb045);
+        }
+
+        .video-card.instagram .video-title,
+        .video-card.instagram .video-platform {
+            color: white;
+        }
+
+        .video-card.pinterest {
+            background: linear-gradient(135deg, #e60023, #bd081c);
+        }
+
+        .video-card.pinterest .video-title,
+        .video-card.pinterest .video-platform {
+            color: white;
+        }
+
+        .video-card.autre {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+        }
+
+        .video-card.autre .video-title,
+        .video-card.autre .video-platform {
+            color: white;
+        }
+
+        .video-icon {
+            font-size: 2rem;
+            min-width: 40px;
+            text-align: center;
+        }
+
+        .video-info {
+            flex: 1;
+            overflow: hidden;
+        }
+
+        .video-title {
+            font-weight: 600;
+            font-size: 0.95rem;
+            color: #4a4a6a;
+            margin-bottom: 4px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .video-platform {
+            font-size: 0.75rem;
+            opacity: 0.8;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .video-card a {
+            color: inherit;
+            text-decoration: none;
+        }
+
+        .video-delete {
+            position: absolute;
+            top: 5px;
+            right: 5px;
+            background: rgba(255,255,255,0.9);
+            border: none;
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 0.8rem;
+            opacity: 0;
+            transition: opacity 0.2s;
+        }
+
+        .video-card:hover .video-delete {
+            opacity: 1;
+        }
+
+        .video-link-btn {
+            background: rgba(255,255,255,0.2);
+            border: none;
+            padding: 5px 12px;
+            border-radius: 15px;
+            color: white;
+            font-size: 0.75rem;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .video-link-btn:hover {
+            background: rgba(255,255,255,0.3);
+        }
+
+        .empty-videos {
+            text-align: center;
+            padding: 40px;
+            color: #888;
+        }
+
+        .empty-videos .emoji {
+            font-size: 3rem;
+            margin-bottom: 15px;
+        }
+
+        /* Healthy Recipes Section */
+        .healthy-section {
+            background: rgba(255,255,255,0.95);
+            border-radius: 20px;
+            padding: 30px;
+            margin-top: 20px;
+        }
+
+        .healthy-section h2 {
+            color: #4a4a6a;
+            margin-bottom: 10px;
+        }
+
+        .healthy-section .subtitle {
+            color: #888;
+            font-size: 0.9rem;
+            margin-bottom: 25px;
+        }
+
+        .healthy-categories {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 20px;
+        }
+
+        .healthy-category {
+            background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+            border-radius: 15px;
+            padding: 20px;
+        }
+
+        .healthy-category h3 {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: #4a4a6a;
+            margin-bottom: 15px;
+            font-size: 1rem;
+        }
+
+        .healthy-category.breakfast { border-top: 4px solid #fdcb6e; }
+        .healthy-category.lunch { border-top: 4px solid #00b894; }
+        .healthy-category.dinner { border-top: 4px solid #6c5ce7; }
+        .healthy-category.snacks { border-top: 4px solid #fd79a8; }
+
+        .recipe-chip {
+            display: inline-block;
+            background: white;
+            padding: 8px 14px;
+            border-radius: 20px;
+            margin: 4px;
+            font-size: 0.85rem;
+            color: #4a4a6a;
+            cursor: pointer;
+            transition: all 0.2s;
+            border: 2px solid transparent;
+        }
+
+        .recipe-chip:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+        }
+
+        .recipe-chip.breakfast:hover { border-color: #fdcb6e; background: #fef9e7; }
+        .recipe-chip.lunch:hover { border-color: #00b894; background: #e8f8f5; }
+        .recipe-chip.dinner:hover { border-color: #6c5ce7; background: #f4f3fe; }
+        .recipe-chip.snacks:hover { border-color: #fd79a8; background: #fef0f5; }
+
+        .recipe-chip .calories {
+            font-size: 0.7rem;
+            color: #00b894;
+            margin-left: 5px;
+            font-weight: 600;
+        }
+
+        .healthy-tips {
+            background: linear-gradient(135deg, #00b894, #00a383);
+            color: white;
+            border-radius: 15px;
+            padding: 20px;
+            margin-top: 20px;
+        }
+
+        .healthy-tips h3 {
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .healthy-tips ul {
+            list-style: none;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 10px;
+        }
+
+        .healthy-tips li {
+            padding: 5px 0;
+            font-size: 0.9rem;
+        }
+
+        .healthy-tips li::before {
+            content: "✓ ";
+            font-weight: bold;
+        }
+
+        /* Detailed Recipes Section */
+        .detailed-recipes {
+            background: rgba(255,255,255,0.95);
+            border-radius: 20px;
+            padding: 30px;
+            margin-top: 20px;
+        }
+
+        .detailed-recipes h2 {
+            color: #4a4a6a;
+            margin-bottom: 25px;
+        }
+
+        .recipe-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 20px;
+        }
+
+        .recipe-card {
+            background: linear-gradient(135deg, #f8f9fa, #fff);
+            border-radius: 15px;
+            padding: 20px;
+            border-left: 5px solid;
+            transition: all 0.3s ease;
+        }
+
+        .recipe-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        }
+
+        .recipe-card.day-1 { border-color: #ff6b6b; }
+        .recipe-card.day-2 { border-color: #ffa502; }
+        .recipe-card.day-3 { border-color: #2ed573; }
+        .recipe-card.day-4 { border-color: #1e90ff; }
+        .recipe-card.day-5 { border-color: #a55eea; }
+        .recipe-card.day-6 { border-color: #ff4757; }
+        .recipe-card.day-7 { border-color: #3742fa; }
+
+        .recipe-card .day-badge {
+            display: inline-block;
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            margin-bottom: 10px;
+            color: white;
+        }
+
+        .recipe-card.day-1 .day-badge { background: #ff6b6b; }
+        .recipe-card.day-2 .day-badge { background: #ffa502; }
+        .recipe-card.day-3 .day-badge { background: #2ed573; }
+        .recipe-card.day-4 .day-badge { background: #1e90ff; }
+        .recipe-card.day-5 .day-badge { background: #a55eea; }
+        .recipe-card.day-6 .day-badge { background: #ff4757; }
+        .recipe-card.day-7 .day-badge { background: #3742fa; }
+
+        .recipe-card h4 {
+            color: #2d3436;
+            font-size: 1.1rem;
+            margin-bottom: 5px;
+        }
+
+        .recipe-card .kcal-badge {
+            display: inline-block;
+            background: #00b894;
+            color: white;
+            padding: 3px 10px;
+            border-radius: 15px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            margin-bottom: 15px;
+        }
+
+        .recipe-card .ingredients {
+            list-style: none;
+            padding: 0;
+        }
+
+        .recipe-card .ingredients li {
+            padding: 6px 0;
+            border-bottom: 1px dashed #eee;
+            font-size: 0.9rem;
+            color: #636e72;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .recipe-card .ingredients li:last-child {
+            border-bottom: none;
+        }
+
+        .recipe-card .ingredients .qty {
+            font-weight: 600;
+            color: #2d3436;
+        }
+
+        .recipe-card .tip {
+            background: #fff3cd;
+            padding: 10px;
+            border-radius: 8px;
+            font-size: 0.8rem;
+            margin-top: 12px;
+            color: #856404;
+        }
+
+        .recipe-card .tip::before {
+            content: "💡 ";
+        }
+
+        .section-divider {
+            text-align: center;
+            margin: 30px 0 20px;
+            color: #4a4a6a;
+            font-size: 1.2rem;
+            font-weight: 600;
+        }
+
+        .section-divider::before,
+        .section-divider::after {
+            content: "───";
+            margin: 0 15px;
+            color: #ddd;
+        }
+
+        /* Sonia Weekly Plan */
+        .sonia-weekly-plan {
+            background: linear-gradient(135deg, #fff0f6, #ffeef8);
+            border-radius: 20px;
+            padding: 30px;
+            margin-top: 20px;
+            border-top: 5px solid #e84393;
+        }
+
+        .sonia-weekly-plan h2 {
+            color: #e84393;
+            margin-bottom: 5px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .sonia-weekly-plan .subtitle {
+            color: #636e72;
+            font-size: 0.9rem;
+            margin-bottom: 25px;
+        }
+
+        .week-days-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 15px;
+        }
+
+        .day-plan {
+            background: white;
+            border-radius: 15px;
+            padding: 18px;
+            border-left: 4px solid #e84393;
+            box-shadow: 0 3px 12px rgba(0,0,0,0.08);
+            transition: all 0.3s;
+        }
+
+        .day-plan:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(232, 67, 147, 0.15);
+        }
+
+        .day-plan .day-title {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 12px;
+        }
+
+        .day-plan .day-name {
+            background: linear-gradient(135deg, #e84393, #fd79a8);
+            color: white;
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-weight: 600;
+            font-size: 0.85rem;
+        }
+
+        .day-plan .day-theme {
+            color: #636e72;
+            font-size: 0.8rem;
+            font-style: italic;
+        }
+
+        .meal-row {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 10px;
+            align-items: flex-start;
+        }
+
+        .meal-row:last-child {
+            margin-bottom: 0;
+        }
+
+        .meal-time {
+            min-width: 50px;
+            font-weight: 600;
+            font-size: 0.75rem;
+            padding: 4px 8px;
+            border-radius: 8px;
+            text-align: center;
+        }
+
+        .meal-time.matin {
+            background: #fff3cd;
+            color: #856404;
+        }
+
+        .meal-time.midi {
+            background: #d4edda;
+            color: #155724;
+        }
+
+        .meal-time.soir {
+            background: #cce5ff;
+            color: #004085;
+        }
+
+        .meal-desc {
+            font-size: 0.82rem;
+            color: #2d3436;
+            line-height: 1.4;
+        }
+
+        .tips-section {
+            background: linear-gradient(135deg, #a29bfe, #6c5ce7);
+            color: white;
+            border-radius: 15px;
+            padding: 25px;
+            margin-top: 25px;
+        }
+
+        .tips-section h3 {
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .tips-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 15px;
+        }
+
+        .tip-card {
+            background: rgba(255,255,255,0.15);
+            padding: 15px;
+            border-radius: 12px;
+        }
+
+        .tip-card h4 {
+            font-size: 0.95rem;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .tip-card p {
+            font-size: 0.85rem;
+            opacity: 0.95;
+            line-height: 1.5;
+        }
+
+        .snack-note {
+            background: rgba(255,255,255,0.2);
+            padding: 15px;
+            border-radius: 12px;
+            margin-top: 15px;
+            font-size: 0.85rem;
+            line-height: 1.5;
+        }
+
+        .snack-note strong {
+            display: block;
+            margin-bottom: 5px;
+        }
+
+        /* Monthly Shopping List */
+        .monthly-shopping {
+            background: linear-gradient(135deg, #e8f5e9, #f1f8e9);
+            border-radius: 20px;
+            padding: 30px;
+            margin-top: 20px;
+            border-top: 4px solid #4caf50;
+        }
+
+        .monthly-shopping h2 {
+            color: #2e7d32;
+            margin-bottom: 10px;
+        }
+
+        .monthly-shopping .subtitle {
+            color: #558b2f;
+            font-size: 0.9rem;
+            margin-bottom: 25px;
+        }
+
+        .shopping-categories {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 20px;
+            align-items: stretch;
+        }
+
+        @media (max-width: 1200px) {
+            .shopping-categories {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (max-width: 768px) {
+            .shopping-categories {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .shopping-category {
+            background: white;
+            border-radius: 15px;
+            padding: 20px;
+            box-shadow: 0 3px 15px rgba(0,0,0,0.08);
+        }
+
+        .shopping-category h3 {
+            font-size: 1.1rem;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #e8f5e9;
+        }
+
+        .shopping-category.proteins h3 { color: #c62828; border-bottom-color: #ffcdd2; }
+        .shopping-category.carbs h3 { color: #f57c00; border-bottom-color: #ffe0b2; }
+        .shopping-category.dairy h3 { color: #1565c0; border-bottom-color: #bbdefb; }
+        .shopping-category.produce h3 { color: #2e7d32; border-bottom-color: #c8e6c9; }
+
+        .shopping-item {
+            display: flex;
+            align-items: center;
+            padding: 10px 0;
+            border-bottom: 1px dashed #e0e0e0;
+            font-size: 0.9rem;
+            min-height: 45px;
+        }
+
+        .shopping-item:last-child {
+            border-bottom: none;
+        }
+
+        .shopping-item input[type="checkbox"] {
+            width: 18px;
+            height: 18px;
+            min-width: 18px;
+            margin-right: 12px;
+            cursor: pointer;
+            accent-color: #4caf50;
+            flex-shrink: 0;
+        }
+
+        .shopping-item label {
+            flex: 1;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .shopping-item label span:first-child {
+            flex: 1;
+        }
+
+        .shopping-item label .qty {
+            text-align: right;
+            font-weight: 600;
+            color: #27ae60;
+            white-space: nowrap;
+            min-width: 110px;
+            flex-shrink: 0;
+        }
+
+        .shopping-item input:checked + label {
+            text-decoration: line-through;
+            color: #9e9e9e;
+        }
+
+        .shopping-item input:checked + label .qty {
+            color: #9e9e9e;
+        }
+
+        .shopping-category {
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* PLANNINGS CÔTE À CÔTE */
+        .dual-planning {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+
+        @media (max-width: 1200px) {
+            .dual-planning {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* NOUVEAU CONCEPT : 1 PLAT POUR 2 */
+        .shared-meals-concept {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            border-radius: 20px;
+            padding: 30px;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .shared-meals-concept h2 {
+            color: white;
+            margin-bottom: 10px;
+        }
+
+        .shared-meals-concept .subtitle {
+            opacity: 0.9;
+            font-size: 1.1rem;
+        }
+
+        .persons-goals {
+            display: flex;
+            justify-content: center;
+            gap: 40px;
+            margin-top: 25px;
+            flex-wrap: wrap;
+        }
+
+        .person-goal {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            background: rgba(255,255,255,0.15);
+            padding: 15px 25px;
+            border-radius: 15px;
+        }
+
+        .person-goal .person-icon {
+            font-size: 2rem;
+        }
+
+        .person-goal .goal-info {
+            text-align: left;
+        }
+
+        .person-goal .goal-info strong {
+            display: block;
+            font-size: 1.2rem;
+        }
+
+        .person-goal .goal-info span {
+            font-size: 0.85rem;
+            opacity: 0.9;
+        }
+
+        /* PETITS-DÉJEUNERS */
+        .breakfast-section {
+            background: linear-gradient(135deg, #fff9e6, #fff3cd);
+            border-radius: 20px;
+            padding: 30px;
+            margin-bottom: 20px;
+            border-top: 5px solid #f39c12;
+        }
+
+        .breakfast-section h2 {
+            color: #d68910;
+        }
+
+        .breakfast-options {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        .breakfast-card {
+            background: white;
+            border-radius: 15px;
+            padding: 20px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+        }
+
+        .breakfast-card.sucre {
+            border-left: 5px solid #f39c12;
+        }
+
+        .breakfast-card.sale {
+            border-left: 5px solid #e74c3c;
+        }
+
+        .breakfast-header {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 15px;
+        }
+
+        .option-badge {
+            background: #667eea;
+            color: white;
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+
+        .breakfast-header h3 {
+            margin: 0;
+            color: #2d3436;
+        }
+
+        .portions-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+
+        .portion {
+            padding: 15px;
+            border-radius: 10px;
+        }
+
+        .portion.sonia {
+            background: linear-gradient(135deg, #ffeef8, #fff5f9);
+            border: 2px solid #e84393;
+        }
+
+        .portion.luca {
+            background: linear-gradient(135deg, #e3f2fd, #e8f4fd);
+            border: 2px solid #0984e3;
+        }
+
+        .person-label {
+            display: block;
+            font-weight: 600;
+            margin-bottom: 10px;
+            font-size: 0.9rem;
+        }
+
+        .portion ul {
+            margin: 0;
+            padding-left: 0;
+            list-style: none;
+        }
+
+        .portion ul li {
+            padding: 4px 0;
+            font-size: 0.9rem;
+        }
+
+        /* REPAS DE LA SEMAINE */
+        .weekly-meals-shared {
+            background: rgba(255,255,255,0.95);
+            border-radius: 20px;
+            padding: 30px;
+            margin-bottom: 20px;
+        }
+
+        .weekly-meals-shared h2 {
+            color: #4a4a6a;
+        }
+
+        .meals-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        .meal-card-shared {
+            background: white;
+            border-radius: 15px;
+            padding: 20px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+            border-top: 4px solid #667eea;
+        }
+
+        .day-header-shared {
+            margin-bottom: 10px;
+        }
+
+        .day-header-shared .day-name {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            padding: 6px 15px;
+            border-radius: 20px;
+            font-weight: 600;
+            font-size: 0.85rem;
+            display: inline-block;
+        }
+
+        .dish-name {
+            color: #2d3436;
+            font-size: 1.1rem;
+            margin: 15px 0;
+        }
+
+        .portions-comparison {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+        }
+
+        .portion-col {
+            padding: 12px;
+            border-radius: 10px;
+        }
+
+        .portion-col.sonia {
+            background: linear-gradient(135deg, #ffeef8, #fff5f9);
+            border-left: 3px solid #e84393;
+        }
+
+        .portion-col.luca {
+            background: linear-gradient(135deg, #e3f2fd, #e8f4fd);
+            border-left: 3px solid #0984e3;
+        }
+
+        .person-tag {
+            display: inline-block;
+            font-weight: 600;
+            font-size: 0.8rem;
+            margin-bottom: 8px;
+        }
+
+        .portion-col ul {
+            margin: 0;
+            padding-left: 0;
+            list-style: none;
+        }
+
+        .portion-col ul li {
+            padding: 3px 0;
+            font-size: 0.85rem;
+            color: #555;
+        }
+
+        .portion-col ul li strong {
+            color: #2d3436;
+        }
+
+        /* PLANNING JOURS AVEC MATIN/MIDI/SOIR */
+        .days-grid-shared {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        .day-card-shared {
+            background: white;
+            border-radius: 15px;
+            padding: 20px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+            border-left: 5px solid #667eea;
+        }
+
+        .day-card-shared .day-header {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-weight: 600;
+            font-size: 1rem;
+            display: inline-block;
+            margin-bottom: 15px;
+        }
+
+        .meal-row-shared {
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            padding: 10px 0;
+            border-bottom: 1px dashed #e0e0e0;
+        }
+
+        .meal-row-shared:last-child {
+            border-bottom: none;
+        }
+
+        .meal-row-shared .meal-time {
+            min-width: 55px;
+            padding: 4px 10px;
+            border-radius: 12px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-align: center;
+        }
+
+        .meal-content-shared {
+            flex: 1;
+        }
+
+        .meal-content-shared .meal-name {
+            font-weight: 500;
+            color: #2d3436;
+            margin-bottom: 6px;
+            font-size: 0.9rem;
+        }
+
+        .portions-inline {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .portion-mini {
+            font-size: 0.75rem;
+            padding: 3px 8px;
+            border-radius: 8px;
+            font-weight: 500;
+        }
+
+        .portion-mini.sonia {
+            background: linear-gradient(135deg, #ffeef8, #fff0f5);
+            color: #e84393;
+            border: 1px solid #f8bbd9;
+        }
+
+        .portion-mini.luca {
+            background: linear-gradient(135deg, #e8f4fd, #e3f2fd);
+            color: #0984e3;
+            border: 1px solid #90caf9;
+        }
+
+        @media (max-width: 768px) {
+            .days-grid-shared {
+                grid-template-columns: 1fr;
+            }
+            .portions-inline {
+                flex-direction: column;
+                gap: 5px;
+            }
+        }
+
+        /* LES 3 RÈGLES D'OR */
+        .golden-rules {
+            background: linear-gradient(135deg, #ffeaa7, #fdcb6e);
+            border-radius: 20px;
+            padding: 30px;
+            margin-bottom: 20px;
+        }
+
+        .golden-rules h2 {
+            color: #d35400;
+            text-align: center;
+        }
+
+        .rules-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        .rule-card {
+            background: white;
+            border-radius: 15px;
+            padding: 20px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+            position: relative;
+        }
+
+        .rule-number {
+            position: absolute;
+            top: -15px;
+            left: 20px;
+            background: linear-gradient(135deg, #e17055, #d63031);
+            color: white;
+            width: 35px;
+            height: 35px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 1.1rem;
+        }
+
+        .rule-card h3 {
+            margin-top: 10px;
+            color: #2d3436;
+            font-size: 1rem;
+        }
+
+        .rule-content {
+            margin-top: 15px;
+        }
+
+        .rule-person {
+            padding: 10px;
+            border-radius: 8px;
+            margin-bottom: 10px;
+        }
+
+        .rule-person.sonia {
+            background: #ffeef8;
+        }
+
+        .rule-person.luca {
+            background: #e3f2fd;
+        }
+
+        .rule-person p {
+            margin: 5px 0 0 0;
+            font-size: 0.85rem;
+            line-height: 1.5;
+        }
+
+        .rule-item {
+            margin-bottom: 12px;
+        }
+
+        .rule-item p {
+            margin: 5px 0 0 0;
+            font-size: 0.85rem;
+            line-height: 1.5;
+        }
+
+        .highlight-sonia {
+            color: #e84393;
+            font-weight: 600;
+        }
+
+        .highlight-luca {
+            color: #0984e3;
+            font-weight: 600;
+        }
+
+        @media (max-width: 768px) {
+            .persons-goals {
+                flex-direction: column;
+                gap: 15px;
+            }
+
+            .portions-row,
+            .portions-comparison {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Quick Meals Section */
+        .quick-meals {
+            background: linear-gradient(135deg, #fff3e0, #ffe0b2);
+            border-radius: 20px;
+            padding: 30px;
+            margin-top: 20px;
+            border-top: 4px solid #ff9800;
+        }
+
+        .quick-meals h2 {
+            color: #e65100;
+            margin-bottom: 10px;
+        }
+
+        .quick-meals .subtitle {
+            color: #f57c00;
+            font-size: 0.9rem;
+            margin-bottom: 25px;
+        }
+
+        .quick-meals-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+        }
+
+        .quick-meal-card {
+            background: white;
+            border-radius: 15px;
+            padding: 20px;
+            box-shadow: 0 3px 15px rgba(0,0,0,0.08);
+            border-left: 4px solid #ff9800;
+        }
+
+        .quick-meal-card h3 {
+            color: #e65100;
+            font-size: 1.1rem;
+            margin-bottom: 12px;
+        }
+
+        .quick-meal-card .prep {
+            background: #fff8e1;
+            padding: 10px 15px;
+            border-radius: 10px;
+            font-size: 0.85rem;
+            margin-bottom: 15px;
+            color: #5d4037;
+        }
+
+        .quick-meal-card .versions {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .quick-meal-card .version {
+            display: flex;
+            align-items: flex-start;
+            gap: 8px;
+            font-size: 0.85rem;
+        }
+
+        .quick-meal-card .version-label {
+            font-weight: 600;
+            min-width: 50px;
+        }
+
+        .quick-meal-card .version-label.sonia { color: #e91e63; }
+        .quick-meal-card .version-label.luca { color: #2196f3; }
+
+        /* Foods Section */
+        .foods-section {
+            background: rgba(255,255,255,0.95);
+            border-radius: 20px;
+            padding: 30px;
+            margin-top: 20px;
+        }
+
+        .foods-section h2 {
+            color: #4a4a6a;
+            margin-bottom: 10px;
+        }
+
+        .foods-section .intro {
+            color: #636e72;
+            font-size: 0.9rem;
+            margin-bottom: 25px;
+            line-height: 1.6;
+        }
+
+        .foods-columns {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 25px;
+        }
+
+        @media (max-width: 900px) {
+            .foods-columns {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .foods-person {
+            background: linear-gradient(135deg, #f8f9fa, #fff);
+            border-radius: 15px;
+            padding: 20px;
+            border-top: 5px solid;
+        }
+
+        .foods-person.luca-foods {
+            border-color: #0984e3;
+        }
+
+        .foods-person.sonia-foods {
+            border-color: #e84393;
+        }
+
+        .foods-person h3 {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 5px;
+        }
+
+        .foods-person.luca-foods h3 {
+            color: #0984e3;
+        }
+
+        .foods-person.sonia-foods h3 {
+            color: #e84393;
+        }
+
+        .foods-person .goal {
+            font-size: 0.8rem;
+            color: #636e72;
+            margin-bottom: 15px;
+            padding: 8px 12px;
+            background: rgba(0,0,0,0.03);
+            border-radius: 8px;
+        }
+
+        .food-category {
+            margin-bottom: 15px;
+        }
+
+        .food-category h4 {
+            font-size: 0.85rem;
+            color: #2d3436;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .food-item {
+            display: grid;
+            grid-template-columns: 1fr 120px 70px;
+            align-items: center;
+            padding: 8px 12px;
+            background: white;
+            border-radius: 8px;
+            margin-bottom: 6px;
+            border-left: 3px solid #ddd;
+            font-size: 0.82rem;
+            transition: all 0.2s;
+            gap: 10px;
+        }
+
+        .food-item:hover {
+            transform: translateX(5px);
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+        }
+
+        .food-item.proteins { border-color: #e17055; }
+        .food-item.veggies { border-color: #00b894; }
+        .food-item.carbs { border-color: #fdcb6e; }
+        .food-item.fats { border-color: #6c5ce7; }
+        .food-item.fruits { border-color: #fd79a8; }
+
+        .food-item .food-name {
+            font-weight: 500;
+            color: #2d3436;
+        }
+
+        .food-item .cooking {
+            font-size: 0.7rem;
+            color: #636e72;
+            text-align: center;
+        }
+
+        .food-item .food-freq {
+            font-size: 0.7rem;
+            padding: 3px 8px;
+            border-radius: 12px;
+            font-weight: 600;
+            text-align: center;
+        }
+
+        .food-item.proteins .food-freq { background: #ffeaa7; color: #d35400; }
+        .food-item.veggies .food-freq { background: #dfe6e9; color: #00b894; }
+        .food-item.carbs .food-freq { background: #fff3cd; color: #856404; }
+        .food-item.fats .food-freq { background: #e8daef; color: #6c5ce7; }
+        .food-item.fruits .food-freq { background: #fadbd8; color: #e84393; }
+
+        .food-item .cooking {
+            font-size: 0.7rem;
+            color: #636e72;
+            margin-left: 8px;
+        }
+
+        .cooking-tips {
+            background: linear-gradient(135deg, #74b9ff, #0984e3);
+            color: white;
+            border-radius: 15px;
+            padding: 20px;
+            margin-top: 25px;
+        }
+
+        .cooking-tips h3 {
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .cooking-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 12px;
+        }
+
+        .cooking-method {
+            background: rgba(255,255,255,0.15);
+            padding: 12px;
+            border-radius: 10px;
+        }
+
+        .cooking-method h4 {
+            font-size: 0.9rem;
+            margin-bottom: 5px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .cooking-method p {
+            font-size: 0.8rem;
+            opacity: 0.9;
+            line-height: 1.4;
+        }
+
+        .avoid-section {
+            background: linear-gradient(135deg, #ff6b6b, #ee5a5a);
+            color: white;
+            border-radius: 15px;
+            padding: 20px;
+            margin-top: 20px;
+        }
+
+        .avoid-section h3 {
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .avoid-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 10px;
+        }
+
+        .avoid-item {
+            background: rgba(255,255,255,0.15);
+            padding: 10px 15px;
+            border-radius: 8px;
+            font-size: 0.85rem;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🍽️ Meal Prep de la Semaine</h1>
+            <p>Planning repas pour Luca & Sonia</p>
+        </header>
+
+        <div class="week-selector">
+            <input type="week" id="weekPicker" value="">
+        </div>
+
+        <!-- NOUVEAU CONCEPT: 1 PLAT POUR 2 -->
+        <div class="shared-meals-concept">
+            <h2>🍽️ 1 Plat pour 2 - Doses Différentes</h2>
+            <p class="subtitle">Même repas, portions adaptées | Sonia ~1500 kcal | Luca ~2500 kcal</p>
+        </div>
+        <!-- PLANNINGS CÔTE À CÔTE -->
+        <div class="dual-planning">
+            <!-- PLANNING SONIA -->
+            <div class="sonia-weekly-plan">
+                <h2>🌸 Planning Sonia</h2>
+                <p class="subtitle">~1500 kcal/jour</p>
+                <div class="week-days-grid">
+                    <div class="day-plan">
+                        <div class="day-title"><span class="day-name">Lundi</span></div>
+                        <div class="meal-row"><span class="meal-time matin">Matin</span><span class="meal-desc" contenteditable="true"><strong>150g Skyr</strong> + <strong>1 Pomme</strong></span></div>
+                        <div class="meal-row"><span class="meal-time midi">Midi</span><span class="meal-desc" contenteditable="true"><strong>120g Poulet</strong> + <strong>100g Riz</strong> + <strong>200g Ratatouille</strong></span></div>
+                        <div class="meal-row"><span class="meal-time soir">Soir</span><span class="meal-desc" contenteditable="true"><strong>120g Saumon</strong> + <strong>200g Asperges</strong> + <strong>1/4 Avocat</strong></span></div>
+                    </div>
+                    <div class="day-plan">
+                        <div class="day-title"><span class="day-name">Mardi</span></div>
+                        <div class="meal-row"><span class="meal-time matin">Matin</span><span class="meal-desc" contenteditable="true"><strong>150g Skyr</strong> + <strong>30g Framboises</strong> + <strong>10 Amandes</strong></span></div>
+                        <div class="meal-row"><span class="meal-time midi">Midi</span><span class="meal-desc" contenteditable="true"><strong>120g Thon</strong> + <strong>100g Lentilles</strong> + <strong>200g Tomates</strong></span></div>
+                        <div class="meal-row"><span class="meal-time soir">Soir</span><span class="meal-desc" contenteditable="true"><strong>Omelette 2 oeufs</strong> + <strong>200g Épinards</strong></span></div>
+                    </div>
+                    <div class="day-plan">
+                        <div class="day-title"><span class="day-name">Mercredi</span></div>
+                        <div class="meal-row"><span class="meal-time matin">Matin</span><span class="meal-desc" contenteditable="true"><strong>20g Chia</strong> + <strong>100ml Lait amande</strong> + <strong>1/2 Pomme</strong></span></div>
+                        <div class="meal-row"><span class="meal-time midi">Midi</span><span class="meal-desc" contenteditable="true"><strong>100g Quinoa</strong> + <strong>60g Pois chiches</strong> + <strong>1/2 Avocat</strong></span></div>
+                        <div class="meal-row"><span class="meal-time soir">Soir</span><span class="meal-desc" contenteditable="true"><strong>250ml Velouté courgette</strong> + <strong>2 tr. Dinde</strong></span></div>
+                    </div>
+                    <div class="day-plan">
+                        <div class="day-title"><span class="day-name">Jeudi</span></div>
+                        <div class="meal-row"><span class="meal-time matin">Matin</span><span class="meal-desc" contenteditable="true"><strong>150g Yaourt grec</strong> + <strong>50g Fruits rouges</strong></span></div>
+                        <div class="meal-row"><span class="meal-time midi">Midi</span><span class="meal-desc" contenteditable="true"><strong>120g Steak 5%</strong> + <strong>200g Brocolis</strong> + <strong>100g Pdt</strong></span></div>
+                        <div class="meal-row"><span class="meal-time soir">Soir</span><span class="meal-desc" contenteditable="true"><strong>150g Crevettes</strong> + <strong>200g Poêlée légumes</strong></span></div>
+                    </div>
+                    <div class="day-plan">
+                        <div class="day-title"><span class="day-name">Vendredi</span></div>
+                        <div class="meal-row"><span class="meal-time matin">Matin</span><span class="meal-desc" contenteditable="true"><strong>40g Flocons avoine</strong> + <strong>150ml Lait amande</strong> + <strong>30g Myrtilles</strong></span></div>
+                        <div class="meal-row"><span class="meal-time midi">Midi</span><span class="meal-desc" contenteditable="true"><strong>2 Oeufs durs</strong> + <strong>200g Mâche</strong> + <strong>20g Feta</strong></span></div>
+                        <div class="meal-row"><span class="meal-time soir">Soir</span><span class="meal-desc" contenteditable="true"><strong>140g Cabillaud</strong> + <strong>200g Poireaux</strong></span></div>
+                    </div>
+                    <div class="day-plan">
+                        <div class="day-title"><span class="day-name">Samedi</span></div>
+                        <div class="meal-row"><span class="meal-time matin">Matin</span><span class="meal-desc" contenteditable="true"><strong>200g Skyr</strong> + <strong>1 Banane</strong></span></div>
+                        <div class="meal-row"><span class="meal-time midi">Midi</span><span class="meal-desc" contenteditable="true"><strong>120g Bolognaise</strong> + <strong>100g Pâtes complètes</strong></span></div>
+                        <div class="meal-row"><span class="meal-time soir">Soir</span><span class="meal-desc" contenteditable="true"><strong>120g Dinde</strong> + <strong>200g Purée carottes</strong></span></div>
+                    </div>
+                    <div class="day-plan">
+                        <div class="day-title"><span class="day-name">Dimanche</span></div>
+                        <div class="meal-row"><span class="meal-time matin">Matin</span><span class="meal-desc" contenteditable="true"><strong>150g Fromage blanc</strong> + <strong>Fruits de saison</strong></span></div>
+                        <div class="meal-row"><span class="meal-time midi">Midi</span><span class="meal-desc" contenteditable="true"><strong>120g Poulet rôti</strong> + <strong>100g Boulghour</strong> + <strong>200g Haricots</strong></span></div>
+                        <div class="meal-row"><span class="meal-time soir">Soir</span><span class="meal-desc" contenteditable="true"><strong>300ml Soupe légumes</strong> + <strong>125g Skyr</strong></span></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- PLANNING LUCA -->
+            <div class="sonia-weekly-plan" style="background: linear-gradient(135deg, #e3f2fd, #e8f4fd); border-top-color: #0984e3;">
+                <h2 style="color: #0984e3;">💪 Planning Luca</h2>
+                <p class="subtitle">~2500 kcal/jour</p>
+                <div class="week-days-grid">
+                    <div class="day-plan" style="border-left-color: #0984e3;">
+                        <div class="day-title"><span class="day-name" style="background: linear-gradient(135deg, #0984e3, #74b9ff);">Lundi</span></div>
+                        <div class="meal-row"><span class="meal-time matin">Matin</span><span class="meal-desc" contenteditable="true"><strong>2 oeufs</strong> + <strong>2 tr. pain complet</strong> + <strong>30g fromage</strong></span></div>
+                        <div class="meal-row"><span class="meal-time midi">Midi</span><span class="meal-desc" contenteditable="true"><strong>200g Poulet</strong> + <strong>180g Riz</strong> + <strong>200g Ratatouille</strong></span></div>
+                        <div class="meal-row"><span class="meal-time soir">Soir</span><span class="meal-desc" contenteditable="true"><strong>180g Saumon</strong> + <strong>200g Asperges</strong> + <strong>1/2 Avocat</strong></span></div>
+                    </div>
+                    <div class="day-plan" style="border-left-color: #0984e3;">
+                        <div class="day-title"><span class="day-name" style="background: linear-gradient(135deg, #0984e3, #74b9ff);">Mardi</span></div>
+                        <div class="meal-row"><span class="meal-time matin">Matin</span><span class="meal-desc" contenteditable="true"><strong>60g Flocons avoine</strong> + <strong>200ml Lait</strong> + <strong>1 Banane</strong> + <strong>20g Beurre cacahuète</strong></span></div>
+                        <div class="meal-row"><span class="meal-time midi">Midi</span><span class="meal-desc" contenteditable="true"><strong>180g Thon</strong> + <strong>150g Lentilles</strong> + <strong>200g Tomates</strong></span></div>
+                        <div class="meal-row"><span class="meal-time soir">Soir</span><span class="meal-desc" contenteditable="true"><strong>Omelette 2 oeufs</strong> + <strong>250g Épinards</strong></span></div>
+                    </div>
+                    <div class="day-plan" style="border-left-color: #0984e3;">
+                        <div class="day-title"><span class="day-name" style="background: linear-gradient(135deg, #0984e3, #74b9ff);">Mercredi</span></div>
+                        <div class="meal-row"><span class="meal-time matin">Matin</span><span class="meal-desc" contenteditable="true"><strong>2 oeufs brouillés</strong> + <strong>2 tr. pain</strong> + <strong>1 Avocat</strong></span></div>
+                        <div class="meal-row"><span class="meal-time midi">Midi</span><span class="meal-desc" contenteditable="true"><strong>150g Quinoa</strong> + <strong>100g Pois chiches</strong> + <strong>1 Avocat</strong></span></div>
+                        <div class="meal-row"><span class="meal-time soir">Soir</span><span class="meal-desc" contenteditable="true"><strong>350ml Velouté courgette</strong> + <strong>4 tr. Dinde</strong></span></div>
+                    </div>
+                    <div class="day-plan" style="border-left-color: #0984e3;">
+                        <div class="day-title"><span class="day-name" style="background: linear-gradient(135deg, #0984e3, #74b9ff);">Jeudi</span></div>
+                        <div class="meal-row"><span class="meal-time matin">Matin</span><span class="meal-desc" contenteditable="true"><strong>200g Skyr</strong> + <strong>50g Granola</strong> + <strong>1 Banane</strong></span></div>
+                        <div class="meal-row"><span class="meal-time midi">Midi</span><span class="meal-desc" contenteditable="true"><strong>180g Steak 5%</strong> + <strong>200g Brocolis</strong> + <strong>200g Pdt</strong></span></div>
+                        <div class="meal-row"><span class="meal-time soir">Soir</span><span class="meal-desc" contenteditable="true"><strong>200g Crevettes</strong> + <strong>250g Poêlée légumes</strong></span></div>
+                    </div>
+                    <div class="day-plan" style="border-left-color: #0984e3;">
+                        <div class="day-title"><span class="day-name" style="background: linear-gradient(135deg, #0984e3, #74b9ff);">Vendredi</span></div>
+                        <div class="meal-row"><span class="meal-time matin">Matin</span><span class="meal-desc" contenteditable="true"><strong>Smoothie:</strong> 200ml lait + 1 banane + 30g flocons + 20g beurre cacahuète</span></div>
+                        <div class="meal-row"><span class="meal-time midi">Midi</span><span class="meal-desc" contenteditable="true"><strong>2 Oeufs durs</strong> + <strong>200g Mâche</strong> + <strong>40g Feta</strong> + <strong>100g Pain</strong></span></div>
+                        <div class="meal-row"><span class="meal-time soir">Soir</span><span class="meal-desc" contenteditable="true"><strong>200g Cabillaud</strong> + <strong>250g Poireaux</strong> + <strong>150g Riz</strong></span></div>
+                    </div>
+                    <div class="day-plan" style="border-left-color: #0984e3;">
+                        <div class="day-title"><span class="day-name" style="background: linear-gradient(135deg, #0984e3, #74b9ff);">Samedi</span></div>
+                        <div class="meal-row"><span class="meal-time matin">Matin</span><span class="meal-desc" contenteditable="true"><strong>Pancake</strong> (1 banane + 2 oeufs) + <strong>sirop d'érable</strong></span></div>
+                        <div class="meal-row"><span class="meal-time midi">Midi</span><span class="meal-desc" contenteditable="true"><strong>200g Bolognaise</strong> + <strong>180g Pâtes complètes</strong></span></div>
+                        <div class="meal-row"><span class="meal-time soir">Soir</span><span class="meal-desc" contenteditable="true"><strong>180g Dinde</strong> + <strong>300g Purée carottes</strong></span></div>
+                    </div>
+                    <div class="day-plan" style="border-left-color: #0984e3;">
+                        <div class="day-title"><span class="day-name" style="background: linear-gradient(135deg, #0984e3, #74b9ff);">Dimanche</span></div>
+                        <div class="meal-row"><span class="meal-time matin">Matin</span><span class="meal-desc" contenteditable="true"><strong>2 Oeufs + Bacon</strong> + <strong>2 tr. Pain</strong> + <strong>Tomates</strong></span></div>
+                        <div class="meal-row"><span class="meal-time midi">Midi</span><span class="meal-desc" contenteditable="true"><strong>200g Poulet rôti</strong> + <strong>180g Boulghour</strong> + <strong>200g Haricots</strong></span></div>
+                        <div class="meal-row"><span class="meal-time soir">Soir</span><span class="meal-desc" contenteditable="true"><strong>400ml Soupe légumes</strong> + <strong>200g Skyr</strong> + <strong>Pain</strong></span></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 3 RÈGLES D'OR -->
+        <div class="golden-rules">
+            <h3>⭐ Les 3 Règles d'Or</h3>
+            <div class="rules-grid">
+                <div class="rule-card">
+                    <div class="rule-icon">🍽️</div>
+                    <div class="rule-title">Assiette Visuelle</div>
+                    <div class="rule-desc" contenteditable="true">1/2 légumes + 1/4 protéines + 1/4 féculents</div>
+                </div>
+                <div class="rule-card">
+                    <div class="rule-icon">📏</div>
+                    <div class="rule-title">Contrôle Extras</div>
+                    <div class="rule-desc" contenteditable="true">Sauces, huile, fromage = mesurés en cuillères</div>
+                </div>
+                <div class="rule-card">
+                    <div class="rule-icon">💧</div>
+                    <div class="rule-title">Hydratation</div>
+                    <div class="rule-desc" contenteditable="true">2L eau minimum + thé/infusions libres</div>
+                </div>
+            </div>
+        </div>
+
+
+
+        <div class="actions">
+            <button class="btn btn-save" onclick="saveData(true)">💾 Sauvegarder</button>
+            <button class="btn btn-print" onclick="window.print()">🖨️ Imprimer</button>
+            <button class="btn btn-clear" onclick="clearAll()">🗑️ Tout effacer</button>
+        </div>
+
+                <!-- PLATS RAPIDES -->
+        <div class="quick-meals">
+            <h2>⚡ Plats "Rapides" (Moins de 10 minutes)</h2>
+            <p class="subtitle">Pour les soirs de flemme, voici comment manger équilibré sans cuisiner longtemps !</p>
+
+            <div class="quick-meals-grid">
+                <!-- Bowl Express -->
+                <div class="quick-meal-card">
+                    <h3>🥗 1. Le Bowl Express "Placard"</h3>
+                    <div class="prep">
+                        <strong>Préparation :</strong> Mélanger une boîte de thon (ou sardines), une boîte de pois chiches (rincés), et des tomates cerises.
+                    </div>
+                    <div class="versions">
+                        <div class="version">
+                            <span class="version-label sonia">Sonia:</span>
+                            <span>Ajouter 1/4 d'avocat et du citron</span>
+                        </div>
+                        <div class="version">
+                            <span class="version-label luca">Luca:</span>
+                            <span>Ajouter 1/2 poche de riz précuit (micro-ondable) + 1 avocat entier</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Omelette Flash -->
+                <div class="quick-meal-card">
+                    <h3>🍳 2. L'Omelette "Flash" aux Épinards</h3>
+                    <div class="prep">
+                        <strong>Préparation :</strong> Faire chauffer des épinards surgelés (en galets) au micro-ondes. Les jeter dans la poêle avec les œufs battus.
+                    </div>
+                    <div class="versions">
+                        <div class="version">
+                            <span class="version-label sonia">Sonia:</span>
+                            <span>2 œufs + une montagne d'épinards</span>
+                        </div>
+                        <div class="version">
+                            <span class="version-label luca">Luca:</span>
+                            <span>4 à 5 œufs + épinards + 2 tranches de pain de seigle</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Tartine Scandinave -->
+                <div class="quick-meal-card">
+                    <h3>🥪 3. La Tartine "Scandinave"</h3>
+                    <div class="prep">
+                        <strong>Préparation :</strong> Utiliser le pain de seigle (sorti du congélateur et grillé).
+                    </div>
+                    <div class="versions">
+                        <div class="version">
+                            <span class="version-label sonia">Sonia:</span>
+                            <span>Fromage frais + 1 tranche de saumon fumé ou dinde + concombre</span>
+                        </div>
+                        <div class="version">
+                            <span class="version-label luca">Luca:</span>
+                            <span>Même chose mais avec 3 ou 4 grandes tartines + un œuf au plat par-dessus</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Skyr Salé -->
+                <div class="quick-meal-card">
+                    <h3>🥒 4. Le Skyr Salé (Option fraîcheur)</h3>
+                    <div class="prep">
+                        <strong>Préparation :</strong> Utiliser le fromage blanc ou Skyr comme base de sauce. Mélanger avec des herbes (ciboulette/ail), ajouter des crevettes déjà cuites et des bâtonnets de carottes/concombre.
+                    </div>
+                    <div class="versions">
+                        <div class="version">
+                            <span class="version-label sonia">Sonia:</span>
+                            <span>Manger tel quel</span>
+                        </div>
+                        <div class="version">
+                            <span class="version-label luca">Luca:</span>
+                            <span>Accompagner d'un gros morceau de pain ou de restes de riz</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+            <!-- COOKING TIPS -->
+        <div class="cooking-tips">
+            <h3>👨‍🍳 Méthodes de Cuisson Optimales</h3>
+            <div class="cooking-grid">
+                <div class="cooking-method">
+                    <h4>💨 Vapeur</h4>
+                    <p>Préserve 90% des vitamines. Idéal pour légumes et poissons. Pas de matière grasse ajoutée.</p>
+                </div>
+                <div class="cooking-method">
+                    <h4>🔥 Grillé/Plancha</h4>
+                    <p>Viandes et légumes. Peu d'huile nécessaire. Donne du goût sans calories.</p>
+                </div>
+                <div class="cooking-method">
+                    <h4>📦 Four</h4>
+                    <p>Cuisson homogène à 180-200°C. Parfait pour batch cooking. Utiliser papier sulfurisé.</p>
+                </div>
+                <div class="cooking-method">
+                    <h4>🥗 Cru</h4>
+                    <p>100% des nutriments conservés. Maximum de fibres. Idéal pour légumes et fruits.</p>
+                </div>
+                <div class="cooking-method">
+                    <h4>🫕 Papillote</h4>
+                    <p>Cuisson dans son jus. Zéro matière grasse. Saveurs concentrées.</p>
+                </div>
+                <div class="cooking-method">
+                    <h4>🍳 Poché</h4>
+                    <p>Oeufs parfaits, poisson délicat. Eau frémissante + vinaigre. Zéro gras.</p>
+                </div>
+            </div>
+        </div>
+
+            <!-- AVOID SECTION -->
+        <div class="avoid-section">
+            <h3>🚫 Aliments à Éviter</h3>
+            <div class="avoid-grid">
+                <div class="avoid-item">❌ Fritures (frites, nuggets)</div>
+                <div class="avoid-item">❌ Sucres ajoutés (sodas, bonbons)</div>
+                <div class="avoid-item">❌ Pain blanc / Pâtes blanches</div>
+                <div class="avoid-item">❌ Charcuterie grasse</div>
+                <div class="avoid-item">❌ Plats préparés industriels</div>
+                <div class="avoid-item">❌ Alcool (calories vides)</div>
+                <div class="avoid-item">❌ Sauces industrielles</div>
+                <div class="avoid-item">❌ Céréales sucrées</div>
+                <div class="avoid-item">❌ Beurre / Crème fraîche</div>
+                <div class="avoid-item">❌ Jus de fruits (même 100%)</div>
+            </div>
+        </div>
+
+        <!-- LISTE DE COURSES MENSUELLE -->
+        <div class="monthly-shopping">
+            <h2>⚖️ Liste de Courses - 1 Mois (Sonia & Luca)</h2>
+            <p class="subtitle">Quantités calculées pour la maintenance de Luca (1m95) et la perte de poids de Sonia (1m50)</p>
+
+            <div class="shopping-categories">
+                <!-- Protéines -->
+                <div class="shopping-category proteins">
+                    <h3>🥩 Protéines (Viandes, Poissons, Œufs)</h3>
+                    <div class="shopping-item">
+                        <input type="checkbox" id="shop1">
+                        <label for="shop1"><span>Œufs</span><span class="qty">12 douzaines (~150 œufs)</span></label>
+                    </div>
+                    <div class="shopping-item">
+                        <input type="checkbox" id="shop2">
+                        <label for="shop2"><span>Volaille (Poulet/Dinde)</span><span class="qty">8 kg</span></label>
+                    </div>
+                    <div class="shopping-item">
+                        <input type="checkbox" id="shop3">
+                        <label for="shop3"><span>Viande hachée 5%</span><span class="qty">4 kg</span></label>
+                    </div>
+                    <div class="shopping-item">
+                        <input type="checkbox" id="shop4">
+                        <label for="shop4"><span>Poisson blanc (Surgelé)</span><span class="qty">3 kg</span></label>
+                    </div>
+                    <div class="shopping-item">
+                        <input type="checkbox" id="shop5">
+                        <label for="shop5"><span>Poisson gras (Saumon/Sardines)</span><span class="qty">2 kg</span></label>
+                    </div>
+                    <div class="shopping-item">
+                        <input type="checkbox" id="shop6">
+                        <label for="shop6"><span>Crevettes</span><span class="qty">2 kg</span></label>
+                    </div>
+                    <div class="shopping-item">
+                        <input type="checkbox" id="shop7">
+                        <label for="shop7"><span>Charcuterie maigre (Dinde/Bresaola)</span><span class="qty">15-20 paquets</span></label>
+                    </div>
+                </div>
+
+                <!-- Féculents -->
+                <div class="shopping-category carbs">
+                    <h3>🌾 Féculents & Sec (Poids sec)</h3>
+                    <div class="shopping-item">
+                        <input type="checkbox" id="shop8">
+                        <label for="shop8"><span>Riz complet</span><span class="qty">3 kg</span></label>
+                    </div>
+                    <div class="shopping-item">
+                        <input type="checkbox" id="shop9">
+                        <label for="shop9"><span>Pâtes complètes</span><span class="qty">2 kg</span></label>
+                    </div>
+                    <div class="shopping-item">
+                        <input type="checkbox" id="shop10">
+                        <label for="shop10"><span>Quinoa / Boulghour</span><span class="qty">2 kg</span></label>
+                    </div>
+                    <div class="shopping-item">
+                        <input type="checkbox" id="shop11">
+                        <label for="shop11"><span>Lentilles / Pois chiches</span><span class="qty">2 kg</span></label>
+                    </div>
+                    <div class="shopping-item">
+                        <input type="checkbox" id="shop12">
+                        <label for="shop12"><span>Flocons d'avoine</span><span class="qty">3 kg</span></label>
+                    </div>
+                    <div class="shopping-item">
+                        <input type="checkbox" id="shop13">
+                        <label for="shop13"><span>Pain de seigle / complet</span><span class="qty">8-10 pains</span></label>
+                    </div>
+                </div>
+
+                <!-- Laitages -->
+                <div class="shopping-category dairy">
+                    <h3>🥛 Laitages & Gras</h3>
+                    <div class="shopping-item">
+                        <input type="checkbox" id="shop14">
+                        <label for="shop14"><span>Fromage blanc 0% / Skyr</span><span class="qty">15-20 kg</span></label>
+                    </div>
+                    <div class="shopping-item">
+                        <input type="checkbox" id="shop15">
+                        <label for="shop15"><span>Lait d'amande (sans sucre)</span><span class="qty">12 litres</span></label>
+                    </div>
+                    <div class="shopping-item">
+                        <input type="checkbox" id="shop16">
+                        <label for="shop16"><span>Avocats</span><span class="qty">16-20 unités</span></label>
+                    </div>
+                    <div class="shopping-item">
+                        <input type="checkbox" id="shop17">
+                        <label for="shop17"><span>Beurre de cacahuète</span><span class="qty">2 pots (500g)</span></label>
+                    </div>
+                    <div class="shopping-item">
+                        <input type="checkbox" id="shop18">
+                        <label for="shop18"><span>Huile d'olive</span><span class="qty">2 litres</span></label>
+                    </div>
+                </div>
+
+                <!-- Fruits & Légumes -->
+                <div class="shopping-category produce">
+                    <h3>🥦 Fruits & Légumes</h3>
+                    <div class="shopping-item">
+                        <input type="checkbox" id="shop19">
+                        <label for="shop19"><span>Légumes (Frais + Surgelés)</span><span class="qty">25-30 kg</span></label>
+                    </div>
+                    <div class="shopping-item">
+                        <input type="checkbox" id="shop20">
+                        <label for="shop20"><span>Brocolis, épinards, haricots</span><span class="qty">~10 kg</span></label>
+                    </div>
+                    <div class="shopping-item">
+                        <input type="checkbox" id="shop21">
+                        <label for="shop21"><span>Carottes, courgettes</span><span class="qty">~10 kg</span></label>
+                    </div>
+                    <div class="shopping-item">
+                        <input type="checkbox" id="shop22">
+                        <label for="shop22"><span>Fruits (Bananes, pommes, baies)</span><span class="qty">15-20 kg</span></label>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="notes-section">
+            <h2>📝 Notes & Rappels</h2>
+            <div class="notes-grid">
+                <div class="note-card">
+                    <h4>Prep Sunday</h4>
+                    <div contenteditable="true">Préparer les bases: riz, légumes grillés, sauces...</div>
+                </div>
+                <div class="note-card">
+                    <h4>Allergies / Préférences</h4>
+                    <div contenteditable="true">Luca: + protéines<br>Sonia: + légumes</div>
+                </div>
+                <div class="note-card">
+                    <h4>À congeler</h4>
+                    <div contenteditable="true">Portions supplémentaires pour la semaine suivante</div>
+                </div>
+                <div class="note-card">
+                    <h4>Budget estimé</h4>
+                    <div contenteditable="true">~€ _____ cette semaine</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="videos-section">
+            <h2>🎬 Recettes & Inspirations</h2>
+            <div class="video-input-row">
+                <input type="text" id="videoTitle" placeholder="Nom de la recette (ex: Poulet miel soja)">
+                <input type="url" id="videoUrl" placeholder="Lien (TikTok, YouTube, Instagram...)">
+                <select id="videoPlatform">
+                    <option value="tiktok">TikTok</option>
+                    <option value="youtube">YouTube</option>
+                    <option value="instagram">Instagram</option>
+                    <option value="pinterest">Pinterest</option>
+                    <option value="autre">Autre</option>
+                </select>
+                <button onclick="addVideo()">+ Ajouter</button>
+            </div>
+            <div class="video-links-grid" id="videoLinksGrid">
+                <div class="empty-videos" id="emptyVideos">
+                    <div class="emoji">📹</div>
+                    <p>Ajoutez vos liens de recettes ici!</p>
+                    <p style="font-size: 0.8rem; margin-top: 5px;">TikTok, YouTube, Instagram, Pinterest...</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="healthy-section">
+            <h2>🥗 Idées Recettes Healthy</h2>
+            <p class="subtitle">Clique sur une recette pour la copier dans ton planning</p>
+
+            <div class="healthy-categories">
+                <!-- Petit-déjeuner -->
+                <div class="healthy-category breakfast">
+                    <h3>🌅 Petit-déjeuner</h3>
+                    <span class="recipe-chip breakfast" onclick="copyRecipe(this)">Avocado toast oeuf poché <span class="calories">~350 kcal</span></span>
+                    <span class="recipe-chip breakfast" onclick="copyRecipe(this)">Porridge flocons d'avoine <span class="calories">~300 kcal</span></span>
+                    <span class="recipe-chip breakfast" onclick="copyRecipe(this)">Pancakes protéinés banane <span class="calories">~280 kcal</span></span>
+                    <span class="recipe-chip breakfast" onclick="copyRecipe(this)">Smoothie bowl açaï <span class="calories">~320 kcal</span></span>
+                    <span class="recipe-chip breakfast" onclick="copyRecipe(this)">Oeufs brouillés épinards <span class="calories">~250 kcal</span></span>
+                    <span class="recipe-chip breakfast" onclick="copyRecipe(this)">Yaourt grec fruits rouges <span class="calories">~200 kcal</span></span>
+                    <span class="recipe-chip breakfast" onclick="copyRecipe(this)">Overnight oats <span class="calories">~350 kcal</span></span>
+                    <span class="recipe-chip breakfast" onclick="copyRecipe(this)">Omelette blanche légumes <span class="calories">~180 kcal</span></span>
+                    <span class="recipe-chip breakfast" onclick="copyRecipe(this)">Toast saumon fumé <span class="calories">~300 kcal</span></span>
+                    <span class="recipe-chip breakfast" onclick="copyRecipe(this)">Chia pudding coco <span class="calories">~280 kcal</span></span>
+                </div>
+
+                <!-- Déjeuner -->
+                <div class="healthy-category lunch">
+                    <h3>☀️ Déjeuner</h3>
+                    <span class="recipe-chip lunch" onclick="copyRecipe(this)">Poulet grillé quinoa légumes <span class="calories">~450 kcal</span></span>
+                    <span class="recipe-chip lunch" onclick="copyRecipe(this)">Buddha bowl saumon <span class="calories">~480 kcal</span></span>
+                    <span class="recipe-chip lunch" onclick="copyRecipe(this)">Salade poulet avocat <span class="calories">~400 kcal</span></span>
+                    <span class="recipe-chip lunch" onclick="copyRecipe(this)">Wrap dinde crudités <span class="calories">~380 kcal</span></span>
+                    <span class="recipe-chip lunch" onclick="copyRecipe(this)">Poke bowl thon <span class="calories">~420 kcal</span></span>
+                    <span class="recipe-chip lunch" onclick="copyRecipe(this)">Steak 5% haricots verts <span class="calories">~400 kcal</span></span>
+                    <span class="recipe-chip lunch" onclick="copyRecipe(this)">Saumon brocolis riz complet <span class="calories">~480 kcal</span></span>
+                    <span class="recipe-chip lunch" onclick="copyRecipe(this)">Salade grecque feta <span class="calories">~350 kcal</span></span>
+                    <span class="recipe-chip lunch" onclick="copyRecipe(this)">Blanc de poulet patate douce <span class="calories">~420 kcal</span></span>
+                    <span class="recipe-chip lunch" onclick="copyRecipe(this)">Crevettes sautées courgettes <span class="calories">~300 kcal</span></span>
+                </div>
+
+                <!-- Dîner -->
+                <div class="healthy-category dinner">
+                    <h3>🌙 Dîner (léger)</h3>
+                    <span class="recipe-chip dinner" onclick="copyRecipe(this)">Soupe légumes maison <span class="calories">~150 kcal</span></span>
+                    <span class="recipe-chip dinner" onclick="copyRecipe(this)">Omelette champignons <span class="calories">~250 kcal</span></span>
+                    <span class="recipe-chip dinner" onclick="copyRecipe(this)">Salade tiède saumon <span class="calories">~350 kcal</span></span>
+                    <span class="recipe-chip dinner" onclick="copyRecipe(this)">Wok légumes tofu <span class="calories">~300 kcal</span></span>
+                    <span class="recipe-chip dinner" onclick="copyRecipe(this)">Cabillaud vapeur légumes <span class="calories">~280 kcal</span></span>
+                    <span class="recipe-chip dinner" onclick="copyRecipe(this)">Courgettes farcies poulet <span class="calories">~320 kcal</span></span>
+                    <span class="recipe-chip dinner" onclick="copyRecipe(this)">Velouté potimarron <span class="calories">~180 kcal</span></span>
+                    <span class="recipe-chip dinner" onclick="copyRecipe(this)">Salade lentilles légumes <span class="calories">~350 kcal</span></span>
+                    <span class="recipe-chip dinner" onclick="copyRecipe(this)">Blanc poulet ratatouille <span class="calories">~300 kcal</span></span>
+                    <span class="recipe-chip dinner" onclick="copyRecipe(this)">Tartare saumon avocat <span class="calories">~380 kcal</span></span>
+                </div>
+
+                <!-- Snacks -->
+                <div class="healthy-category snacks">
+                    <h3>🍎 Snacks sains</h3>
+                    <span class="recipe-chip snacks" onclick="copyRecipe(this)">Pomme + beurre cacahuète <span class="calories">~200 kcal</span></span>
+                    <span class="recipe-chip snacks" onclick="copyRecipe(this)">Yaourt grec nature <span class="calories">~100 kcal</span></span>
+                    <span class="recipe-chip snacks" onclick="copyRecipe(this)">Amandes (30g) <span class="calories">~180 kcal</span></span>
+                    <span class="recipe-chip snacks" onclick="copyRecipe(this)">Carottes + houmous <span class="calories">~150 kcal</span></span>
+                    <span class="recipe-chip snacks" onclick="copyRecipe(this)">Shake protéiné <span class="calories">~150 kcal</span></span>
+                    <span class="recipe-chip snacks" onclick="copyRecipe(this)">Fromage blanc 0% <span class="calories">~80 kcal</span></span>
+                    <span class="recipe-chip snacks" onclick="copyRecipe(this)">Oeuf dur <span class="calories">~80 kcal</span></span>
+                    <span class="recipe-chip snacks" onclick="copyRecipe(this)">Edamames <span class="calories">~120 kcal</span></span>
+                    <span class="recipe-chip snacks" onclick="copyRecipe(this)">Cottage cheese fruits <span class="calories">~130 kcal</span></span>
+                    <span class="recipe-chip snacks" onclick="copyRecipe(this)">Banana bread protéiné <span class="calories">~180 kcal</span></span>
+                </div>
+            </div>
+
+            <div class="healthy-tips">
+                <h3>💡 Tips pour maigrir</h3>
+                <ul>
+                    <li>Manger des protéines à chaque repas</li>
+                    <li>Privilégier les glucides complexes (riz complet, quinoa)</li>
+                    <li>Boire 2-3L d'eau par jour</li>
+                    <li>Éviter les sucres ajoutés</li>
+                    <li>Dîner léger et tôt (avant 20h)</li>
+                    <li>Prep Sunday = semaine réussie</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- ALIMENTS A CONSOMMER -->
+        <div class="foods-section">
+            <h2>🥗 Les Aliments à Consommer</h2>
+            <p class="intro">
+                Voici les meilleurs aliments pour atteindre vos objectifs respectifs. Chaque aliment est accompagné
+                de sa fréquence maximale recommandée par semaine et de la meilleure méthode de cuisson pour préserver
+                les nutriments et éviter les calories inutiles.
+            </p>
+
+            <div class="foods-columns">
+                <!-- LUCA - MAINTIEN & PRISE DE MASSE -->
+                <div class="foods-person luca-foods">
+                    <h3>💪 Luca - Maintien & Prise de Masse</h3>
+                    <div class="goal">
+                        <strong>Objectif:</strong> Gagner du muscle sec (88kg → 90kg), perdre graisse abdominale<br>
+                        <strong>Calories:</strong> 2400-2600 kcal/jour | <strong>Protéines:</strong> 160-180g/jour (2g/kg)
+                    </div>
+
+                    <div class="food-category">
+                        <h4>🥩 Protéines - Construction Musculaire</h4>
+                        <div class="food-item proteins">
+                            <span class="food-name">Blanc de poulet (31g prot/100g)</span>
+                            <span class="cooking">Grillé/Four</span>
+                            <span class="food-freq">7x/sem</span>
+                        </div>
+                        <div class="food-item proteins">
+                            <span class="food-name">Oeufs entiers (13g prot/2 oeufs)</span>
+                            <span class="cooking">Pochés/Brouillés</span>
+                            <span class="food-freq">14x/sem</span>
+                        </div>
+                        <div class="food-item proteins">
+                            <span class="food-name">Boeuf maigre 5% (26g prot/100g)</span>
+                            <span class="cooking">Grillé saignant</span>
+                            <span class="food-freq">4x/sem</span>
+                        </div>
+                        <div class="food-item proteins">
+                            <span class="food-name">Saumon (25g prot + oméga-3)</span>
+                            <span class="cooking">Four/Vapeur</span>
+                            <span class="food-freq">3x/sem</span>
+                        </div>
+                        <div class="food-item proteins">
+                            <span class="food-name">Thon steak (30g prot/100g)</span>
+                            <span class="cooking">Grillé rosé</span>
+                            <span class="food-freq">2x/sem</span>
+                        </div>
+                        <div class="food-item proteins">
+                            <span class="food-name">Yaourt grec (9g prot/150g)</span>
+                            <span class="cooking">Cru + fruits</span>
+                            <span class="food-freq">7x/sem</span>
+                        </div>
+                        <div class="food-item proteins">
+                            <span class="food-name">Fromage blanc (8g prot/100g)</span>
+                            <span class="cooking">Cru</span>
+                            <span class="food-freq">7x/sem</span>
+                        </div>
+                        <div class="food-item proteins">
+                            <span class="food-name">Whey Isolate (25g prot/dose)</span>
+                            <span class="cooking">Post-training</span>
+                            <span class="food-freq">5x/sem</span>
+                        </div>
+                        <div class="food-item proteins">
+                            <span class="food-name">Cottage cheese (11g prot/100g)</span>
+                            <span class="cooking">Cru (caséine)</span>
+                            <span class="food-freq">4x/sem</span>
+                        </div>
+                        <div class="food-item proteins">
+                            <span class="food-name">Crevettes (24g prot/100g)</span>
+                            <span class="cooking">Sautées 3min</span>
+                            <span class="food-freq">2x/sem</span>
+                        </div>
+                    </div>
+
+                    <div class="food-category">
+                        <h4>🍚 Glucides - Énergie & Récupération</h4>
+                        <div class="food-item carbs">
+                            <span class="food-name">Riz basmati/complet (80g cru)</span>
+                            <span class="cooking">Bouilli 15-20min</span>
+                            <span class="food-freq">7x/sem</span>
+                        </div>
+                        <div class="food-item carbs">
+                            <span class="food-name">Patate douce (150g cuite)</span>
+                            <span class="cooking">Four 40min</span>
+                            <span class="food-freq">5x/sem</span>
+                        </div>
+                        <div class="food-item carbs">
+                            <span class="food-name">Flocons d'avoine (60g)</span>
+                            <span class="cooking">Porridge/Overnight</span>
+                            <span class="food-freq">7x/sem</span>
+                        </div>
+                        <div class="food-item carbs">
+                            <span class="food-name">Quinoa (70g cru)</span>
+                            <span class="cooking">Bouilli 15min</span>
+                            <span class="food-freq">4x/sem</span>
+                        </div>
+                        <div class="food-item carbs">
+                            <span class="food-name">Pâtes complètes (80g cru)</span>
+                            <span class="cooking">Al dente 8min</span>
+                            <span class="food-freq">3x/sem</span>
+                        </div>
+                        <div class="food-item carbs">
+                            <span class="food-name">Pain complet/seigle (2 tr.)</span>
+                            <span class="cooking">Toasté</span>
+                            <span class="food-freq">5x/sem</span>
+                        </div>
+                        <div class="food-item carbs">
+                            <span class="food-name">Banane (glucides rapides)</span>
+                            <span class="cooking">Post-training</span>
+                            <span class="food-freq">5x/sem</span>
+                        </div>
+                    </div>
+
+                    <div class="food-category">
+                        <h4>🥑 Graisses - Hormones & Testostérone</h4>
+                        <div class="food-item fats">
+                            <span class="food-name">Avocat (1/2 = 15g lipides)</span>
+                            <span class="cooking">Cru</span>
+                            <span class="food-freq">5x/sem</span>
+                        </div>
+                        <div class="food-item fats">
+                            <span class="food-name">Amandes/Noix (30g)</span>
+                            <span class="cooking">Cru nature</span>
+                            <span class="food-freq">7x/sem</span>
+                        </div>
+                        <div class="food-item fats">
+                            <span class="food-name">Beurre de cacahuète (25g)</span>
+                            <span class="cooking">Cru</span>
+                            <span class="food-freq">5x/sem</span>
+                        </div>
+                        <div class="food-item fats">
+                            <span class="food-name">Huile d'olive (15ml/repas)</span>
+                            <span class="cooking">Cru/Cuisson</span>
+                            <span class="food-freq">7x/sem</span>
+                        </div>
+                        <div class="food-item fats">
+                            <span class="food-name">Jaunes d'oeufs (cholestérol+)</span>
+                            <span class="cooking">Avec oeufs</span>
+                            <span class="food-freq">14x/sem</span>
+                        </div>
+                        <div class="food-item fats">
+                            <span class="food-name">Graines chia/lin (15g oméga-3)</span>
+                            <span class="cooking">Porridge</span>
+                            <span class="food-freq">5x/sem</span>
+                        </div>
+                    </div>
+
+                    <div class="food-category">
+                        <h4>🥦 Légumes - Micronutriments</h4>
+                        <div class="food-item veggies">
+                            <span class="food-name">Brocolis (vitamine C, fer)</span>
+                            <span class="cooking">Vapeur 8min</span>
+                            <span class="food-freq">Illimité</span>
+                        </div>
+                        <div class="food-item veggies">
+                            <span class="food-name">Épinards (fer, magnésium)</span>
+                            <span class="cooking">Cru/Sauté</span>
+                            <span class="food-freq">Illimité</span>
+                        </div>
+                        <div class="food-item veggies">
+                            <span class="food-name">Asperges (anti-inflammatoire)</span>
+                            <span class="cooking">Grillées</span>
+                            <span class="food-freq">3x/sem</span>
+                        </div>
+                        <div class="food-item veggies">
+                            <span class="food-name">Poivrons (vitamine C++)</span>
+                            <span class="cooking">Cru/Grillé</span>
+                            <span class="food-freq">Illimité</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- SONIA - PERTE DE POIDS -->
+                <div class="foods-person sonia-foods">
+                    <h3>🌸 Sonia - Perte de Poids</h3>
+                    <div class="goal">
+                        <strong>Objectif:</strong> Perdre 15kg et graisse abdominale<br>
+                        <strong>Calories:</strong> 1400-1500 kcal/jour | <strong>Déficit:</strong> -500 kcal | <strong>Protéines:</strong> 100-120g/jour
+                    </div>
+
+                    <div class="food-category">
+                        <h4>🔥 Aliments Brûle-Graisses</h4>
+                        <div class="food-item proteins">
+                            <span class="food-name">Pamplemousse (brûle-graisse #1)</span>
+                            <span class="cooking">Cru le matin</span>
+                            <span class="food-freq">7x/sem</span>
+                        </div>
+                        <div class="food-item veggies">
+                            <span class="food-name">Thé vert/Matcha (thermogénique)</span>
+                            <span class="cooking">Infusé 3min</span>
+                            <span class="food-freq">14x/sem</span>
+                        </div>
+                        <div class="food-item veggies">
+                            <span class="food-name">Gingembre frais (métabolisme+)</span>
+                            <span class="cooking">Râpé/Infusion</span>
+                            <span class="food-freq">7x/sem</span>
+                        </div>
+                        <div class="food-item veggies">
+                            <span class="food-name">Citron (détox, digestion)</span>
+                            <span class="cooking">Eau tiède matin</span>
+                            <span class="food-freq">7x/sem</span>
+                        </div>
+                        <div class="food-item veggies">
+                            <span class="food-name">Piment/Cayenne (capsaïcine)</span>
+                            <span class="cooking">Dans les plats</span>
+                            <span class="food-freq">5x/sem</span>
+                        </div>
+                        <div class="food-item veggies">
+                            <span class="food-name">Cannelle (régule glycémie)</span>
+                            <span class="cooking">Porridge/Yaourt</span>
+                            <span class="food-freq">7x/sem</span>
+                        </div>
+                    </div>
+
+                    <div class="food-category">
+                        <h4>🥩 Protéines Ultra-Maigres (satiété++)</h4>
+                        <div class="food-item proteins">
+                            <span class="food-name">Blanc de poulet (110 kcal/100g)</span>
+                            <span class="cooking">Vapeur/Grillé</span>
+                            <span class="food-freq">5x/sem</span>
+                        </div>
+                        <div class="food-item proteins">
+                            <span class="food-name">Cabillaud (80 kcal/100g)</span>
+                            <span class="cooking">Vapeur/Papillote</span>
+                            <span class="food-freq">4x/sem</span>
+                        </div>
+                        <div class="food-item proteins">
+                            <span class="food-name">Crevettes (85 kcal/100g)</span>
+                            <span class="cooking">Poêlées sans huile</span>
+                            <span class="food-freq">3x/sem</span>
+                        </div>
+                        <div class="food-item proteins">
+                            <span class="food-name">Blancs d'oeufs (52 kcal/100g)</span>
+                            <span class="cooking">Omelette 4 blancs</span>
+                            <span class="food-freq">7x/sem</span>
+                        </div>
+                        <div class="food-item proteins">
+                            <span class="food-name">Dinde (105 kcal/100g)</span>
+                            <span class="cooking">Grillée</span>
+                            <span class="food-freq">3x/sem</span>
+                        </div>
+                        <div class="food-item proteins">
+                            <span class="food-name">Fromage blanc 0% (45 kcal/100g)</span>
+                            <span class="cooking">Cru</span>
+                            <span class="food-freq">7x/sem</span>
+                        </div>
+                        <div class="food-item proteins">
+                            <span class="food-name">Yaourt grec 0% (55 kcal/100g)</span>
+                            <span class="cooking">Cru</span>
+                            <span class="food-freq">7x/sem</span>
+                        </div>
+                        <div class="food-item proteins">
+                            <span class="food-name">Tofu soyeux (55 kcal/100g)</span>
+                            <span class="cooking">Wok/Smoothie</span>
+                            <span class="food-freq">3x/sem</span>
+                        </div>
+                    </div>
+
+                    <div class="food-category">
+                        <h4>🥦 Légumes 0 Calorie (volume+++)</h4>
+                        <div class="food-item veggies">
+                            <span class="food-name">Concombre (12 kcal/100g)</span>
+                            <span class="cooking">Cru</span>
+                            <span class="food-freq">Illimité</span>
+                        </div>
+                        <div class="food-item veggies">
+                            <span class="food-name">Céleri (14 kcal/100g)</span>
+                            <span class="cooking">Cru/Soupe</span>
+                            <span class="food-freq">Illimité</span>
+                        </div>
+                        <div class="food-item veggies">
+                            <span class="food-name">Courgettes (17 kcal/100g)</span>
+                            <span class="cooking">Spirales/Vapeur</span>
+                            <span class="food-freq">Illimité</span>
+                        </div>
+                        <div class="food-item veggies">
+                            <span class="food-name">Salade (iceberg/roquette)</span>
+                            <span class="cooking">Crue</span>
+                            <span class="food-freq">Illimité</span>
+                        </div>
+                        <div class="food-item veggies">
+                            <span class="food-name">Tomates (18 kcal/100g)</span>
+                            <span class="cooking">Crues/Grillées</span>
+                            <span class="food-freq">Illimité</span>
+                        </div>
+                        <div class="food-item veggies">
+                            <span class="food-name">Aubergine (25 kcal/100g)</span>
+                            <span class="cooking">Four sans huile</span>
+                            <span class="food-freq">Illimité</span>
+                        </div>
+                        <div class="food-item veggies">
+                            <span class="food-name">Champignons (22 kcal/100g)</span>
+                            <span class="cooking">Poêlés sans gras</span>
+                            <span class="food-freq">Illimité</span>
+                        </div>
+                        <div class="food-item veggies">
+                            <span class="food-name">Chou-fleur (25 kcal/100g)</span>
+                            <span class="cooking">Vapeur/Rice</span>
+                            <span class="food-freq">Illimité</span>
+                        </div>
+                    </div>
+
+                    <div class="food-category">
+                        <h4>🍓 Fruits Low-Sugar</h4>
+                        <div class="food-item fruits">
+                            <span class="food-name">Fruits rouges (32 kcal/100g)</span>
+                            <span class="cooking">Crus/Surgelés</span>
+                            <span class="food-freq">7x/sem</span>
+                        </div>
+                        <div class="food-item fruits">
+                            <span class="food-name">Pomme verte (52 kcal, fibres++)</span>
+                            <span class="cooking">Crue avec peau</span>
+                            <span class="food-freq">5x/sem</span>
+                        </div>
+                        <div class="food-item fruits">
+                            <span class="food-name">Pamplemousse (42 kcal/100g)</span>
+                            <span class="cooking">Cru</span>
+                            <span class="food-freq">7x/sem</span>
+                        </div>
+                        <div class="food-item fruits">
+                            <span class="food-name">Kiwi (61 kcal, digestion+)</span>
+                            <span class="cooking">Cru</span>
+                            <span class="food-freq">4x/sem</span>
+                        </div>
+                        <div class="food-item fruits">
+                            <span class="food-name">Pastèque (30 kcal/100g)</span>
+                            <span class="cooking">Crue</span>
+                            <span class="food-freq">3x/sem</span>
+                        </div>
+                    </div>
+
+                    <div class="food-category">
+                        <h4>🍚 Glucides Fibreux (IG bas)</h4>
+                        <div class="food-item carbs">
+                            <span class="food-name">Flocons d'avoine (30g max)</span>
+                            <span class="cooking">Porridge eau</span>
+                            <span class="food-freq">5x/sem</span>
+                        </div>
+                        <div class="food-item carbs">
+                            <span class="food-name">Lentilles (riches fibres)</span>
+                            <span class="cooking">Bouillies 100g</span>
+                            <span class="food-freq">3x/sem</span>
+                        </div>
+                        <div class="food-item carbs">
+                            <span class="food-name">Quinoa (50g cru max)</span>
+                            <span class="cooking">Bouilli</span>
+                            <span class="food-freq">2x/sem</span>
+                        </div>
+                        <div class="food-item carbs">
+                            <span class="food-name">Konjac/Shirataki (0 cal!)</span>
+                            <span class="cooking">Wok/Soupe</span>
+                            <span class="food-freq">5x/sem</span>
+                        </div>
+                    </div>
+
+                    <div class="food-category">
+                        <h4>🥑 Graisses Minimales</h4>
+                        <div class="food-item fats">
+                            <span class="food-name">Avocat (1/4 max = 80 kcal)</span>
+                            <span class="cooking">Cru</span>
+                            <span class="food-freq">2x/sem</span>
+                        </div>
+                        <div class="food-item fats">
+                            <span class="food-name">Amandes (10g = 60 kcal)</span>
+                            <span class="cooking">Cru nature</span>
+                            <span class="food-freq">3x/sem</span>
+                        </div>
+                        <div class="food-item fats">
+                            <span class="food-name">Huile olive (1 c.à.c = 45 kcal)</span>
+                            <span class="cooking">Cru uniquement</span>
+                            <span class="food-freq">5x/sem</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+
+
+        </div>
+    </div>
+
+    <script>
+        // Set current week
+        const today = new Date();
+        const weekPicker = document.getElementById('weekPicker');
+        const year = today.getFullYear();
+        const week = getWeekNumber(today);
+        weekPicker.value = `${year}-W${week.toString().padStart(2, '0')}`;
+
+        function getWeekNumber(d) {
+            d = new Date(Date.UTC(d.getFullYear(), d.getMonth(), d.getDate()));
+            d.setUTCDate(d.getUTCDate() + 4 - (d.getUTCDay() || 7));
+            const yearStart = new Date(Date.UTC(d.getUTCFullYear(), 0, 1));
+            return Math.ceil((((d - yearStart) / 86400000) + 1) / 7);
+        }
+
+        // Highlight today
+        const dayOfWeek = today.getDay();
+        document.querySelectorAll('.day-header').forEach(el => {
+            if (parseInt(el.dataset.day) === dayOfWeek) {
+                el.classList.add('today');
+            }
+        });
+
+        // Save functionality
+        function saveData(showAlert = false) {
+            const data = {
+                week: weekPicker.value,
+                meals: [],
+                shoppingList: document.getElementById('shoppingList').value,
+                notes: [],
+                // Nouveau format "1 plat pour 2"
+                sharedMeals: [],
+                breakfasts: [],
+                portions: [],
+                rules: []
+            };
+
+            document.querySelectorAll('.meal-content').forEach((el, index) => {
+                data.meals.push(el.textContent);
+            });
+
+            document.querySelectorAll('.note-card div[contenteditable]').forEach((el) => {
+                data.notes.push(el.innerHTML);
+            });
+
+            // Sauvegarder les noms des plats partagés
+            document.querySelectorAll('.meal-name[contenteditable]').forEach((el) => {
+                data.sharedMeals.push(el.textContent);
+            });
+
+            // Sauvegarder les petits-déjeuners
+            document.querySelectorAll('.breakfast-item[contenteditable]').forEach((el) => {
+                data.breakfasts.push(el.textContent);
+            });
+
+            // Sauvegarder les portions (Sonia et Luca)
+            document.querySelectorAll('.portion-detail[contenteditable]').forEach((el) => {
+                data.portions.push(el.textContent);
+            });
+
+            // Sauvegarder les règles d'or
+            document.querySelectorAll('.rule-desc[contenteditable]').forEach((el) => {
+                data.rules.push(el.textContent);
+            });
+
+            localStorage.setItem('mealPrepData', JSON.stringify(data));
+            if (showAlert) {
+                alert('✅ Sauvegardé avec succès!');
+            }
+        }
+
+        // Load saved data
+        function loadData() {
+            const saved = localStorage.getItem('mealPrepData');
+            if (saved) {
+                const data = JSON.parse(saved);
+
+                document.querySelectorAll('.meal-content').forEach((el, index) => {
+                    if (data.meals && data.meals[index]) {
+                        el.textContent = data.meals[index];
+                    }
+                });
+
+                if (data.shoppingList) {
+                    document.getElementById('shoppingList').value = data.shoppingList;
+                }
+
+                document.querySelectorAll('.note-card div[contenteditable]').forEach((el, index) => {
+                    if (data.notes && data.notes[index]) {
+                        el.innerHTML = data.notes[index];
+                    }
+                });
+
+                // Charger les noms des plats partagés
+                document.querySelectorAll('.meal-name[contenteditable]').forEach((el, index) => {
+                    if (data.sharedMeals && data.sharedMeals[index]) {
+                        el.textContent = data.sharedMeals[index];
+                    }
+                });
+
+                // Charger les petits-déjeuners
+                document.querySelectorAll('.breakfast-item[contenteditable]').forEach((el, index) => {
+                    if (data.breakfasts && data.breakfasts[index]) {
+                        el.textContent = data.breakfasts[index];
+                    }
+                });
+
+                // Charger les portions
+                document.querySelectorAll('.portion-detail[contenteditable]').forEach((el, index) => {
+                    if (data.portions && data.portions[index]) {
+                        el.textContent = data.portions[index];
+                    }
+                });
+
+                // Charger les règles d'or
+                document.querySelectorAll('.rule-desc[contenteditable]').forEach((el, index) => {
+                    if (data.rules && data.rules[index]) {
+                        el.textContent = data.rules[index];
+                    }
+                });
+            }
+        }
+
+        // Clear all
+        function clearAll() {
+            if (confirm('⚠️ Êtes-vous sûr de vouloir tout effacer?')) {
+                document.querySelectorAll('.meal-content').forEach(el => {
+                    el.textContent = '';
+                });
+                document.getElementById('shoppingList').value = '';
+                localStorage.removeItem('mealPrepData');
+                alert('🗑️ Tout a été effacé!');
+            }
+        }
+
+        // Load on page load
+        loadData();
+
+        // Debounced auto-save (évite les sauvegardes trop fréquentes)
+        let saveTimeout;
+        function debouncedSave() {
+            clearTimeout(saveTimeout);
+            saveTimeout = setTimeout(() => saveData(), 500);
+        }
+
+        // Auto-save on changes
+        document.querySelectorAll('[contenteditable="true"]').forEach(el => {
+            el.addEventListener('input', debouncedSave);
+        });
+
+        document.getElementById('shoppingList').addEventListener('input', debouncedSave);
+
+        // Copy recipe to clipboard
+        function copyRecipe(element) {
+            const text = element.childNodes[0].textContent.trim();
+            navigator.clipboard.writeText(text).then(() => {
+                element.style.transform = 'scale(1.1)';
+                element.style.background = '#00b894';
+                element.style.color = 'white';
+                setTimeout(() => {
+                    element.style.transform = '';
+                    element.style.background = '';
+                    element.style.color = '';
+                }, 300);
+            });
+        }
+
+        // Video links management
+        let videoLinks = [];
+
+        function getVideoIcon(platform) {
+            const icons = {
+                tiktok: '🎵',
+                youtube: '▶️',
+                instagram: '📸',
+                pinterest: '📌',
+                autre: '🔗'
+            };
+            return icons[platform] || '🔗';
+        }
+
+        function addVideo() {
+            const title = document.getElementById('videoTitle').value.trim();
+            const url = document.getElementById('videoUrl').value.trim();
+            const platform = document.getElementById('videoPlatform').value;
+
+            if (!title || !url) {
+                alert('⚠️ Veuillez remplir le nom et le lien!');
+                return;
+            }
+
+            videoLinks.push({ title, url, platform, id: Date.now() });
+            renderVideos();
+            saveVideoLinks();
+
+            // Clear inputs
+            document.getElementById('videoTitle').value = '';
+            document.getElementById('videoUrl').value = '';
+        }
+
+        function deleteVideo(id) {
+            videoLinks = videoLinks.filter(v => v.id !== id);
+            renderVideos();
+            saveVideoLinks();
+        }
+
+        function renderVideos() {
+            const grid = document.getElementById('videoLinksGrid');
+            const empty = document.getElementById('emptyVideos');
+
+            if (videoLinks.length === 0) {
+                grid.innerHTML = `
+                    <div class="empty-videos" id="emptyVideos">
+                        <div class="emoji">📹</div>
+                        <p>Ajoutez vos liens de recettes ici!</p>
+                        <p style="font-size: 0.8rem; margin-top: 5px;">TikTok, YouTube, Instagram, Pinterest...</p>
+                    </div>
+                `;
+                return;
+            }
+
+            grid.innerHTML = videoLinks.map(video => `
+                <div class="video-card ${video.platform}">
+                    <div class="video-icon">${getVideoIcon(video.platform)}</div>
+                    <div class="video-info">
+                        <div class="video-title">${video.title}</div>
+                        <div class="video-platform">${video.platform}</div>
+                    </div>
+                    <button class="video-link-btn" onclick="window.open('${video.url}', '_blank')">Ouvrir</button>
+                    <button class="video-delete" onclick="deleteVideo(${video.id})">✕</button>
+                </div>
+            `).join('');
+        }
+
+        function saveVideoLinks() {
+            localStorage.setItem('mealPrepVideos', JSON.stringify(videoLinks));
+        }
+
+        function loadVideoLinks() {
+            const saved = localStorage.getItem('mealPrepVideos');
+            if (saved) {
+                videoLinks = JSON.parse(saved);
+                renderVideos();
+            }
+        }
+
+        // Load videos on page load
+        loadVideoLinks();
+
+        // Allow Enter key to add video
+        document.getElementById('videoUrl').addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') addVideo();
+        });
+        document.getElementById('videoTitle').addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') document.getElementById('videoUrl').focus();
+        });
+    </script>
+
+    <!-- Service Worker Registration -->
+    <script>
+        // Enregistrement du Service Worker pour la PWA
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('./service-worker.js')
+                    .then((registration) => {
+                        console.log('Service Worker enregistré avec succès:', registration.scope);
+                    })
+                    .catch((error) => {
+                        console.log('Erreur lors de l\'enregistrement du Service Worker:', error);
+                    });
+            });
+        }
+
+        // Détection du mode standalone (PWA installée)
+        if (window.matchMedia('(display-mode: standalone)').matches) {
+            console.log('Application lancée en mode PWA');
+        }
+
+        // Prompt d'installation pour iOS
+        let deferredPrompt;
+        window.addEventListener('beforeinstallprompt', (e) => {
+            e.preventDefault();
+            deferredPrompt = e;
+        });
+    </script>
+</body>
+</html>
